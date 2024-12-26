@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Guessing Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    #gameContainer {
+      margin-top: 50px;
+    }
+    input[type="number"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Number Guessing Game</h1>
+  <p>Guess the number between 1 and 100!</p>
+  <div id="gameContainer">
+    <input type="number" id="guessInput" placeholder="Enter your guess" disabled>
+    <button id="startButton">Start Game</button>
+    <button id="submitButton" disabled>Submit Guess</button>
+    <div class="message" id="message"></div>
+    <div class="message" id="attempts"></div>
+  </div>
+
+  <script>
+    let randomNumber;
+    let attemptsLeft;
+    const maxAttempts = 10;
+
+    const startButton = document.getElementById("startButton");
+    const submitButton = document.getElementById("submitButton");
+    const guessInput = document.getElementById("guessInput");
+    const messageElement = document.getElementById("message");
+    const attemptsElement = document.getElementById("attempts");
+
+    function startGame() {
+      // Generate a random number between 1 and 100
+      randomNumber = Math.floor(Math.random() * 100) + 1;
+      attemptsLeft = maxAttempts;
+
+      // Reset UI
+      guessInput.value = "";
+      messageElement.textContent = "Game started! Make your first guess.";
+      attemptsElement.textContent = `Attempts left: ${attemptsLeft}`;
+      guessInput.disabled = false;
+      submitButton.disabled = false;
+    }
+
+    function submitGuess() {
+      const playerGuess = parseInt(guessInput.value);
+
+      if (isNaN(playerGuess) || playerGuess < 1 || playerGuess > 100) {
+        messageElement.textContent = "Please enter a valid number between 1 and 100.";
+        return;
+      }
+
+      attemptsLeft--;
+      attemptsElement.textContent = `Attempts left: ${attemptsLeft}`;
+
+      if (playerGuess === randomNumber) {
+        messageElement.textContent = `Congratulations! You guessed the number ${randomNumber} correctly!`;
+        endGame();
+      } else if (attemptsLeft === 0) {
+        messageElement.textContent = `Game over! The correct number was ${randomNumber}.`;
+        endGame();
+      } else if (playerGuess < randomNumber) {
+        messageElement.textContent = "Too low! Try again.";
+      } else if (playerGuess > randomNumber) {
+        messageElement.textContent = "Too high! Try again.";
+      }
+
+      guessInput.value = "";
+    }
+
+    function endGame() {
+      guessInput.disabled = true;
+      submitButton.disabled = true;
+    }
+
+    startButton.addEventListener("click", startGame);
+    submitButton.addEventListener("click", submitGuess);
+  </script>
+</body>
+</html>
